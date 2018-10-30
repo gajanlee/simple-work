@@ -1,0 +1,108 @@
+\documentclass{article}
+\usepackage{CJKutf8}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{listings}
+
+\begin{document}
+\begin{CJK*}{UTF8}{gbsn}
+
+        \begin{center}
+            \textsc{\LARGE 第一次模式识别作业}\\[1.5cm]
+            \textsc{\LARGE 李佳政 201828013229075}\\[1.cm]
+        \end{center}
+        
+        \section{方程}
+        均值向量如下：\\
+        $m_{1} = {(1, 1)^{T}}$\\
+        $m_{2} = {(2, 2)}^{T}$
+        
+        \noindent协方差矩阵\
+        $C_{1}=C_{2}=C=$
+        $\begin{bmatrix}
+            1 & 0 \\
+            0 & 1
+        \end{bmatrix}$
+        ，逆矩阵$C^{-1}=$
+        $\begin{bmatrix}
+            1 & 0 \\
+            0 & 1
+        \end{bmatrix}$。\\
+        
+        \noindent由于$P({w_{1}})=P({w_{2}})=\frac{1}{2}$，且$C_{1}=C_{2}$，所以判别界面为：
+        \begin{align*}
+            a_{1}(x)-a_{2}(x) &={(m_{1}-m_{2})}^{T}C^{-1}x-\frac{1}{2}m_{1}^{T}C^{-1}m_{1}+\frac{1}{2}m_{2}^{T}C^{-1}m_{2} \\ 
+             &= -4x_{1}-4x_{2}+24 = 0
+        \end{align*}
+
+        \section{绘图}
+        \begin{figure}[h]
+            \centering
+            \includegraphics[width=0.7\linewidth]{split.png}
+        \end{figure}
+        
+        \section{代码}
+        \lstset{language=python}
+        \begin{lstlisting}
+            import numpy as np
+
+            # w1 = [
+            #     [1, 0, 1], 
+            #     [1, 0, 0], 
+            #     [0, 0, 0], 
+            #     [1, 1, 0],
+            # ]
+            
+            # w2 = [
+            #     [1, 1, 1],
+            #     [0, 0, 1],
+            #     [0, 1, 1],
+            #     [0, 1, 0],
+            # ]
+            
+            w1 = [
+                [0, 0],
+                [2, 0],
+                [2, 2],
+                [0, 2],
+            ]
+            
+            w2 = [
+                [4, 4],
+                [6, 4],
+                [6, 6],
+                [4, 6],
+            ]
+            
+            w1 = np.matrix(w1)
+            w2 = np.matrix(w2)
+            
+            m1 = np.mean(w1, axis=0)
+            m2 = np.mean(w2, axis=0) 
+            
+            N = w1.shape[0]
+            cov1 = (w1 - m1).T * (w1 - m1) / N
+            cov2 = (w2 - m2).T * (w2 - m2) / N
+            
+            if np.equal(cov1, cov2).all():
+                coff = ((m1 - m2) * cov1.I).A.reshape(-1, )
+                bias = (-1/2*m1*cov1.I*m1.T + 1/2*m2*cov2.I*m2.T).A\
+                .reshape(-1, )[0]
+                res = "".join(["+{}x{}".format(n, i) if n >= 0 else "{}x\
+                {}".format(n, i) for i, n in enumerate(coff)])[:] + \
+                ("+"+str(bias) if bias >= 0 else str(bias)) + "=0" 
+                print(res)
+            
+                from matplotlib import pyplot as plt
+                plt.scatter(w1[:, 0].A.reshape(-1, ), \
+                w1[:, 1].A.reshape(-1, ), c="r")
+                plt.scatter(w2[:, 0].A.reshape(-1, ), \
+                w2[:, 1].A.reshape(-1, ), c="g")
+                x = np.linspace(-2, 8, 1000)
+                plt.plot(x, 6-x)
+                plt.show()
+            
+        \end{lstlisting}
+
+\end{CJK*}
+\end{document}
