@@ -1,0 +1,391 @@
+\documentclass{article}
+\usepackage{CJKutf8}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{caption}
+\usepackage{amssymb}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{ %
+  language=Octave,                % the language of the code
+  basicstyle=\footnotesize,           % the size of the fonts that are used for the code
+  numbers=left,                   % where to put the line-numbers
+  numberstyle=\tiny\color{gray},  % the style that is used for the line-numbers
+  stepnumber=2,                   % the step between two line-numbers. If it's 1, each line 
+                                  % will be numbered
+  numbersep=5pt,                  % how far the line-numbers are from the code
+  backgroundcolor=\color{white},      % choose the background color. You must add \usepackage{color}
+  showspaces=false,               % show spaces adding particular underscores
+  showstringspaces=false,         % underline spaces within strings
+  showtabs=false,                 % show tabs within strings adding particular underscores
+  frame=single,                   % adds a frame around the code
+  rulecolor=\color{black},        % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. commens (green here))
+  tabsize=2,                      % sets default tabsize to 2 spaces
+  captionpos=b,                   % sets the caption-position to bottom
+  breaklines=true,                % sets automatic line breaking
+  breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+  title=\lstname,                   % show the filename of files included with \lstinputlisting;
+                                  % also try caption instead of title
+  keywordstyle=\color{blue},          % keyword style
+  commentstyle=\color{dkgreen},       % comment style
+  stringstyle=\color{mauve},         % string literal style
+  escapeinside={\%*}{*)},            % if you want to add LaTeX within your code
+  morekeywords={*,...}               % if you want to add more keywords to the set
+}
+
+\newcommand{\trimat}[3]{
+    $$
+        \left(\begin{matrix}
+        #1 \\
+        #2 \\
+        #3 \\
+        \end{matrix}\right)
+    $$
+}
+
+\begin{document}
+
+\begin{CJK*}{UTF8}{gbsn}
+
+    \begin{center}
+        \textsc{\LARGE 第三章模式识别作业}\\[1.5cm]
+        \textsc{\LARGE 李佳政 201828013229075}\\[1.cm]
+    \end{center}
+
+    %\noindent LaTeX
+    % 在需要缩进的地方设置\setlength\parindent{2em}   
+    \setlength\parindent{0em}   
+    \section{判别函数数目}
+
+    因为共3类单独满足多数情况1,也就是说明通过线性判别可以完全分开这三类与剩余7类。3类共需要3个判别函数，额外1个判别函数用来分开另外7类。7类满足多数情况2,所以共需要$7\times(7-1)/2=21$，所以总共需要$3+1+21=25$个判别函数。
+    
+    \section{三个多分类情况}
+    % h 水平排列
+
+    \begin{figure}[htbp]
+        \centering
+            \subfigure[多类情况1]{
+                \begin{minipage}[t]{0.3\linewidth}
+                \centering
+                \includegraphics[width=2in]{pic1.png}
+                \end{minipage}
+            }
+            \subfigure[多类情况2]{
+                \begin{minipage}[t]{0.3\linewidth}
+                \centering
+                \includegraphics[width=2in]{pic2.png}
+                \end{minipage}
+            }
+            \subfigure[多类情况3]{
+                \begin{minipage}[t]{0.3\linewidth}
+                \centering
+                \includegraphics[width=2in]{pic3.png}
+                \end{minipage}
+            }
+        \end{figure}
+
+
+    %\includegraphics[height=2.4in,width=0.5\textwidth]{pic1.png}
+    %\includegraphics[height=2.4in,width=0.5\textwidth]{pic2.png}
+    %\includegraphics[height=2.4in,width=0.5\textwidth,height=0.5\textwidth]{pic3.png}
+
+
+    \section{判别函数组合}
+    \subsection{} 
+    线性可分的情况下，共需要n+1个权向量（增广矩阵），即4个系数分量。
+    \subsection{}
+    二次判别函数共需要
+    \begin{math}
+        N = \frac{(r+n)!}{r!} \times n ! = \frac{5!}{2!3!} = 10
+    \end{math}
+    
+    \section{二分类感知器}
+    将$\omega_{2}$的训练样本乘以-1，得到增广向量。\\
+    \begin{math}
+        x_{1} = [0, 0, 0, 1], x_{2} = [1, 0, 0, 1], x_{3} = [1, 0, 1, 1], x_{4} = [1, 1, 0, 1] \\
+        x_{5} = [0, 0, -1, -1], x_{6} = [0, -1, -1, -1], x_{7} = [0, -1, 0, -1], x_{8} = [-1, -1, -1, -1]
+    \end{math}
+
+    \noindent
+    迭代学习率$C=1$，设置初始权重系数$w_{1}=[0, 0, 0, 0]^{T}$
+    然后开始迭代，\\
+    \begin{math}
+        1) w(1)^{T}x_{1}=0 \ngtr 0, w(2) = w(1) + x_{1} = [0, 0, 0, 1] \\
+        2) w(2)^{T}x_{2}=1 > 0, w(3) = w(2) = [0, 0, 0, 1] \\
+    \end{math}
+    到第四轮都正确分类
+    ...
+    权重变化如下： \\
+    第1轮迭代，权重为，[0. 0. 0. 1.]\\
+    第2轮迭代，权重为，[0. 0. 0. 1.]\\
+    第3轮迭代，权重为，[0. 0. 0. 1.]\\
+    第4轮迭代，权重为，[0. 0. 0. 1.]\\
+    第5轮迭代，权重为，[ 0.  0. -1.  0.]\\
+    第6轮迭代，权重为，[ 0.  0. -1.  0.]\\
+    第7轮迭代，权重为，[ 0. -1. -1. -1.]\\
+    第8轮迭代，权重为，[ 0. -1. -1. -1.]\\
+    第9轮迭代，权重为，[ 0. -1. -1.  0.]\\
+    第10轮迭代，权重为，[ 1. -1. -1.  1.]\\
+    第11轮迭代，权重为，[ 1. -1. -1.  1.]\\
+    第12轮迭代，权重为，[ 1. -1. -1.  1.]\\
+    第13轮迭代，权重为，[ 1. -1. -2.  0.]\\
+    第14轮迭代，权重为，[ 1. -1. -2.  0.]\\
+    第15轮迭代，权重为，[ 1. -1. -2.  0.]\\
+    第16轮迭代，权重为，[ 1. -1. -2.  0.]\\
+    第17轮迭代，权重为，[ 1. -1. -2.  1.]\\
+    第18轮迭代，权重为，[ 1. -1. -2.  1.]\\
+    第19轮迭代，权重为，[ 2. -1. -1.  2.]\\
+    第20轮迭代，权重为，[ 2. -1. -1.  2.]\\
+    第21轮迭代，权重为，[ 2. -1. -2.  1.]\\
+    第22轮迭代，权重为，[ 2. -1. -2.  1.]\\
+    第23轮迭代，权重为，[ 2. -2. -2.  0.]\\
+    第24轮迭代，权重为，[ 2. -2. -2.  0.]\\
+    第25轮迭代，权重为，[ 2. -2. -2.  1.]\\
+    第26轮迭代，权重为，[ 2. -2. -2.  1.]\\
+    第27轮迭代，权重为，[ 2. -2. -2.  1.]\\
+    第28轮迭代，权重为，[ 2. -2. -2.  1.]\\
+    第29轮迭代，权重为，[ 2. -2. -2.  1.]\\
+    第30轮迭代，权重为，[ 2. -2. -2.  1.]\\
+    第31轮迭代，权重为，[ 2. -2. -2.  1.]\\
+    第32轮迭代，权重为，[ 2. -2. -2.  1.]\\
+    第33轮迭代，权重为，[ 2. -2. -2.  1.]\\
+    第34轮迭代，权重为，[ 2. -2. -2.  1.]\\
+    第35轮迭代，权重为，[ 2. -2. -2.  1.]\\
+    第36轮迭代，权重为，[ 2. -2. -2.  1.]\\
+    第37轮迭代，权重为，[ 2. -2. -2.  1.]\\
+    第38轮迭代，权重为，[ 2. -2. -2.  1.]\\
+    第39轮迭代，权重为，[ 2. -2. -2.  1.]\\
+    第40轮迭代，权重为，[ 2. -2. -2.  1.]\\
+    \textbf{程序如下所示}：
+    \lstset{language=python}
+    \begin{lstlisting}
+import numpy as np
+xs = np.array([
+    [0, 0, 0, 1],
+    [1, 0, 0, 1],
+    [1, 0, 1, 1],
+    [1, 1, 0, 1],
+    
+    [0, 0, -1, -1],
+    [0, -1, -1, -1],
+    [0, -1, 0, -1],
+    [-1, -1, -1, -1],
+])
+
+w = np.zeros((xs.shape[1], 1))
+
+for i in range(100):
+    err = False
+    for j, x in enumerate(xs, 1):
+        if np.matmul(w.T, x) <= 0:
+            w += x.reshape(-1, 1)
+            err = True
+    if not err: break
+    \end{lstlisting}
+
+    \section{多分类感知器}
+        将模式样本写成增广形式，即
+    \begin{math}
+        x_{1}=$$\trimat{-1}{-1}{0}$$
+            $，$
+        x_{2} = $$\trimat{0}{0}{1}$$
+        $，$
+        x_{3} = $$\trimat{1}{1}{1}$$
+    \end{math}
+    \\
+    取初始值为
+        $w_{1}=w_{2}=w_{3}=\trimat{0}{0}{0}$
+    \\
+    1)  第一次迭代，以$x_{1}$为样本，
+        \begin{math}
+        d_{1}(x_{1})=d_{2}(x_{1})=d_{3}(x_{1})=0
+        \end{math}.
+        因为$d_{1}(x_{1}) \ngtr d_{2}(x_{1})$
+        且$d_{1}(x_{1}) \ngtr d_{3}(x_{1})$，
+        所以更新权重得到：\\
+        \begin{math}
+            w_{1}(2)=w_{1}(1) + x_{1} = $$\trimat{-1}{-1}{1}$$
+            $，$ \\
+            w_{2}(2)=w_{2}(1) - x_{1} = $$\trimat{1}{1}{-1}$$
+            $，$ \\
+            w_{3}(2)=w_{3}(1) - x_{1} = $$\trimat{1}{1}{-1}$$
+        \end{math}
+
+    \noindent
+    2) 第二次迭代以$x_{2}$为样本，
+        \begin{math}
+            d_{1}(x_{2}) = 1, d_{2}(x_{2}) = -1, d_{3}(x{3}) = -1.
+        \end{math}
+        因为$d_{2}(x_{2}) \ngtr d_{1}(x_{2})$
+        且$d_{2}(x_{2}) \ngtr d_{3}(x_{2})$，
+        所以更新权重得到：\\
+        \begin{math}
+            w_{1}(3)=w_{1}(2) - x_{2} = $$\trimat{-1}{-1}{0}$$
+            $，$ \\
+            w_{2}(3)=w_{2}(2) + x_{2} = $$\trimat{1}{1}{0}$$
+            $，$ \\
+            w_{3}(3)=w_{3}(2) - x_{2} = $$\trimat{1}{1}{-2}$$
+        \end{math}
+
+    \noindent
+    3) 第三次迭代以$x_{3}$为样本，
+        \begin{math}
+            d_{1}(x_{3}) = -2, d_{2}(x_{3}) = 2, d_{3}(x{3}) = 0.
+        \end{math}
+        因为$d_{3}(x_{3}) \ngtr d_{2}(x_{3})$,
+        所以更新权重得到：\\
+        \begin{math}
+            w_{1}(4)=w_{1}(3) = $$\trimat{-1}{-1}{0}$$
+            $，$ \\
+            w_{2}(4)=w_{2}(3) - x_{3} = $$\trimat{0}{0}{-1}$$
+            $，$ \\
+            w_{3}(4)=w_{3}(3) + x_{3} = $$\trimat{2}{2}{-1}$$
+        \end{math}
+    
+    \noindent
+    4) 第四次迭代以$x_{1}$为样本，
+        \begin{math}
+            d_{1}(x_{1}) = 2, d_{2}(x_{1}) = -1, d_{3}(x{1}) = -5.
+        \end{math}
+        分类正确，更新权重得到：\\
+        \begin{math}
+            w_{1}(5)=w_{1}(4) = $$\trimat{-1}{-1}{0}$$
+            $，$ \\
+            w_{2}(5)=w_{2}(4) = $$\trimat{0}{0}{-1}$$
+            $，$ \\
+            w_{3}(5)=w_{3}(4) = $$\trimat{2}{2}{-1}$$
+        \end{math}
+    
+    \noindent
+    5) 第五次迭代以$x_{2}$为样本，
+        \begin{math}
+            d_{1}(x_{1}) = 0, d_{2}(x_{1}) = -1, d_{3}(x{1}) = -1.
+        \end{math}
+        因为$d_{2}(x_{2}) \ngtr d_{2}(x_{1})$,
+        且$d_{2}(x_{2}) \ngtr d_{3}(x_{2})$，
+        所以更新权重得到：\\
+        \begin{math}
+            w_{1}(6)=w_{1}(5) - x_{2} = $$\trimat{-1}{-1}{-1}$$
+            $，$ \\
+            w_{2}(6)=w_{2}(4) + x_{2} = $$\trimat{0}{0}{0}$$
+            $，$ \\
+            w_{3}(6)=w_{3}(4) - x_{2} = $$\trimat{2}{2}{-2}$$
+        \end{math}
+
+    \noindent
+    6) 第六次迭代以$x_{3}$为样本，
+    \begin{math}
+        d_{1}(x_{3}) = -3, d_{2}(x_{3}) = 0, d_{3}(x{3}) = 2.
+    \end{math}
+    分类正确，更新权重得到：
+    \begin{math}
+        w_{1}(7)=w_{1}(6)$$ $，$  w_{2}(7)=w_{2}(6)$$ $，$  w_{3}(7)=w_{3}(6)$$
+    \end{math}
+
+    \noindent
+    7) 第七次迭代以$x_{1}$为样本，
+    \begin{math}
+        d_{1}(x_{1}) = 1, d_{2}(x_{3}) = 0, d_{3}(x{3}) = -6.
+    \end{math}
+    分类正确，更新权重得到：
+    \begin{math}
+        w_{1}(8)=w_{1}(7)$$ $，$  w_{2}(8)=w_{2}(7)$$ $，$  w_{3}(8)=w_{3}(7)$$
+    \end{math}
+
+    \noindent
+    8) 第八次迭代以$x_{2}$为样本，
+    \begin{math}
+        d_{1}(x_{2}) = -1, d_{2}(x_{2}) = 0, d_{3}(x{2}) = -2.
+    \end{math}
+    分类正确，更新权重得到：
+    \begin{math}
+        w_{1}(9)=w_{1}(8)$$ $，$  w_{2}(9)=w_{2}(8)$$ $，$  w_{3}(9)=w_{3}(8)$$
+    \end{math}
+
+    由于第6、7、8次迭代对三个样本均正确分类，所以结果向量
+    \begin{math}
+        $$w_{1}=\trimat{-1}{-1}{-1}, w_{2}=\trimat{0}{0}{0}, w_{3}=\trimat{2}{2}{-2}$$
+    \end{math}
+    三个判别函数为
+    \begin{math}
+        d_{1} = -x_{1}-x_{2}-1, d_{2}=0, d_{3} = 2x_{1}+2x_{2}-2
+    \end{math}
+
+    %% 六题
+    \section{梯度法准则函数}
+    准则函数的导数 \\
+    \begin{math}
+        \frac{\partial J}{\partial w} = \frac{1}{4 \left|| x \right||^{2}}[(w^{T}x-b)-|w^{T}x-b|]\times[x-x\times sgn(w^{T}x-b)],$其中$ 
+        sgn(x)=
+            \begin{cases}
+                1& x > 0\\
+                -1& x \leqslant 0 \\
+            \end{cases}
+    \end{math}  \\
+    所以$w(k+1) = w(k) + C \times \frac{\partial J}{\partial w}$\\
+    即分类函数迭代公式如下，
+    \begin{equation*}
+        w(k+1) = w(k) + C \times 
+        \begin{cases}
+            0   &   w^{T}x-b > 0    \\
+            \frac{(b-w^{T}x)}{||x||^{2}}x  &   w^{T}x-b \leqslant 0
+        \end{cases}
+    \end{equation*}
+    如果分类正确，则$w(k+1)=w(k)$
+
+    %% 七题
+    \section{二次势函数}
+    $\omega_{1} = \{(0, 1)^{T}, (0, -1)^{T}\}$， $\omega_{2} = \{ (1, 0)^{T}, (-1, 0)^{T}\}$。
+    
+    二次Hermite多项式, 所以取前九项最低阶的二维的正交函数: \\
+    $\varphi_{1}(x) = \varphi_{1}(x_{1}, x_{2}) = H_{0}(x_{1})H_{0}(x_{2}) = 1$ \\
+    $\varphi_{2}(x) = \varphi_{2}(x_{1}, x_{2}) = H_{1}(x_{1})H_{0}(x_{2}) = 2x_{1}$ \\
+    $\varphi_{3}(x) = \varphi_{3}(x_{1}, x_{2}) = H_{0}(x_{1})H_{1}(x_{2}) = 2x_{2}$ \\
+    $\varphi_{4}(x) = \varphi_{4}(x_{1}, x_{2}) = H_{1}(x_{1})H_{1}(x_{2}) = 4x_{1}x_{2}$ 
+
+    $\varphi_{5}(x) = \varphi_{5}(x_{1}, x_{2}) = H_{2}(x_{1})H_{0}(x_{2}) = 4x_{1}^{2}-2$ \\
+    $\varphi_{6}(x) = \varphi_{6}(x_{1}, x_{2}) = H_{0}(x_{1})H_{2}(x_{2}) = 4x_{2}^{2}-2$ \\
+    $\varphi_{7}(x) = \varphi_{7}(x_{1}, x_{2}) = H_{2}(x_{1})H_{1}(x_{2}) = 8x_{1}^{2}x_{2} - 4x_{2}$ \\
+    $\varphi_{8}(x) = \varphi_{8}(x_{1}, x_{2}) = H_{1}(x_{1})H_{2}(x_{2}) = 8x_{2}^{2}x_{1} - 4x_{1}$ \\
+    $\varphi_{9}(x) = \varphi_{9}(x_{1}, x_{2}) = H_{2}(x_{1})H_{2}(x_{2}) = (4x_{1}^{2}-2)(4x_{2}^{2}-2)$ \\
+    按照第一类生成势函数：\\
+    \begin{equation*}
+    \begin{aligned}
+        K(x, x_{k}) &= \sum_{i=1}^{9}\varphi_{i}(x)\varphi_{i}(x_{k}) \\
+                    &= ...
+    \end{aligned}
+    \end{equation*}
+
+    第一步: 取$x_{0}=(0, 1)^{T} \in \omega_{1}$，则$K_{1}(x) = K(x, x_{0}) = 1 + 4x_{2} -4(2x_{1}^{2}-1) + 4(2x_{2}^{2}-1) - 16(2x_{1}^{2}-1)(2x_{2}^{2}-1) - 16x_{2}(2x_{1}^{2}-1)$\\
+    第二步：取$x_{1}=(0, -1)^{T} \in \omega_{1}$，则$K_{1}(x_{1})=5 > 0$，所以$K_{2}(x) = K_1(x)$\\
+    第三步：取$x_{2}=(1, 0)^{T} \in \omega_{2}$，则$K_{2}(x_{2})=9 > 0$，所以$K_{3}(x) = K_{2}(x) - K(x, x_{2}) = 20x_{2}-20x_{1}-16x_{1}^{2}+16x_{2}^{2}-32x_{1}^{2}x_{2}+32x_{1}x_{2}^{2}$ \\
+    第四步：取$x_{3}=(-1, 0)^{T} \in \omega_{2}$，则$K_{3}(x_{3})=4 > 0$，所以$K_{4}(x) = K_{3}(x) - K(x, x_{3}) = 15+20x_{2}-56x_{1}^{2}-8x_{2}^{2}-32x_{1}^{2}+64x_{1}^{2}x_{2}^{2}$ \\
+    第五步：取$x_{0}=(0, 1)^{T} \in \omega_{1}$，则$K_{4}(x_{0}) = 27 > 0$，所以$K_5(x) = K_{4}(x)$ \\
+    第六步：取$x_{1}=(0, -1)^{T} \in \omega_{1}$，则$K_{5}(x_{1})=-13 < 0$，所以$K_6(x) = K_5(x) + K{x, x_{6}} = -32x_{1}^{2} + 32x_{2}^{2}$. \\
+    ...\\
+    第七步到第十步模式都分类正确，所以最终的判别函数为$d(x)=-32x_{1}^{2}+32x_{2}^{2}$.
+
+    \section{指数势函数}
+    取$\alpha=1$，得到势函数$K(x, x_{k})=e^{-[(x_{1}-x_{k1})^{2} + (x_{2}-x_{k2})^{2}]}$，数据集与上一题相同，步骤如下：\\
+    第一步：取$x_{0}=(0, 1)^{T} \in \omega_{1}$，则$K_{1}(x) = K(x, x_{0}) = e^{-(x_{1}^{2}+(x_{2}-1)^2)}$. \\
+    第二步：取$x_{1}=(0, -1)^{T} \in \omega_{1}$，则$K_{1}(x_{1})=e^{-(0+4)} > 0$，所以$K_{2}(x) = K_{1}(x)$. \\
+    第三步：取$x_{2}=(1, 0)^{T} \in \omega_{2}$，则$K_{2}(x_{2})=e^{-2} > 0$，所以$K_{3}(x) = K_{2}(x) - K_{2}(x, x_{2}) = e^{-(x_{1}^{2}+(x_{2}+1)^{2})} - e^{-[(x_{1}-1)^{2}+x_{2}^{2}]}$. \\
+    第四步：取$x_{3}=(-1, 0)^{T} \in \omega_{2}$，则$K_{3}(x_{3})=e^{-2}-e^{-4} > 0$，所以$K_{4}(x) = K_{3}(x)-K(x, x_{3}) = e^{-(x_{1}^{2}+(x_{2}+1)^{2})} - e^{-[(x_{1}-1)^{2}+x_{2}^{2}]} - e^{[(x_{1}+1)^{2}+x_{2}^{2}]}$. \\
+    第五步：取$x_{0}=(0, 1)^{T} \in \omega_{1}$，则$K_{4}(x_{0}) = 1-2e^{-2} > 0$，所以$K_{5}(x) = K_{4}(x)$. \\
+    第六步：取$x_{1}=(0, -1)^{T} \in \omega_{1}$，则$K_{5}(x_{1})= e^{-4}-2e^{-2} < 0$，所以$K_6(x) = K_{5}(x) + K_{5}(x, x_{1}) = e^{-(x_{1}^{2}+(x_{2}+1)^{2})} - e^{-[(x_{1}-1)^{2}+x_{2}^{2}]} - e^{[(x_{1}+1)^{2}+x_{2}^{2}]} + e^{-[(x_{1}^{2} + (x_{2}+1)^{2})]}$. \\
+    .... \\
+    第七步到第十步模式都分类正确，所以最终的判别函数为
+    $$d(x)=e^{-(x_{1}^{2}+(x_{2}+1)^{2})} - e^{-[(x_{1}-1)^{2}+x_{2}^{2}]} - e^{[(x_{1}+1)^{2}+x_{2}^{2}]} + e^{-[(x_{1}^{2} + (x_{2}+1)^{2})]}$$
+    
+
+\end{CJK*}
+\end{document}
