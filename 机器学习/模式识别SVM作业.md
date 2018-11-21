@@ -4,7 +4,7 @@
 * 李佳政
 * 计算技术研究所
 
-## 1. SVM硬间隔.
+## 1. SVM硬间隔
 
 * 划分超平面判别函数定义为,
 
@@ -13,8 +13,8 @@ $$w^{T}x + b = 0$$
 * 令数据集中的点有如下形式，
 
 $$\begin{cases} 
-w^{T}x_{i} + b = +1, & y_i=+1,\\ 
-w^{T}x_{i} + b = -1, & y_i=-1 
+w^{T}x_{i} + b = +1, & y_i=+1,\\
+w^{T}x_{i} + b = -1, & y_i=-1
 \end{cases}$$
 
 * 所以最近的两个点$x_{1}$,$x_{2}$之间的间隔为
@@ -50,12 +50,12 @@ $$
 
 $$
 \begin{aligned}
-\mathop {\max} \limits_{\alpha} 
+\mathop {\max} \limits_{\alpha}
 L(w, b, \alpha) &= -\frac{1}{2}w^Tw + \sum_{i=1}^{m}\alpha_i  \\
 &= -\frac{1}{2}\sum_{i=1}^{m}\sum_{j=1}^{m}\alpha_i \alpha_j y_i y_j x_i^T x_j + \sum_{i=1}^{m}\alpha_i \\
 {\rm s.t.} & \sum_{i=1}^{m}\alpha_i y_i = 0, \\
 & \alpha_i \geqslant 0, i=1, 2, ... , m
-\end{aligned} 
+\end{aligned}
 $$
 
 * 解出$\alpha$后，我们可以得到判别函数超平面可以得到模型,
@@ -70,7 +70,7 @@ $$
 * 因为上述过程需要满足KKT(Karush-Kuhn-Tucker)条件,
 
 $$
-\begin{cases} 
+\begin{cases}
 \alpha_i \geqslant 0; \\
 y_i f(x_i) - 1 \geqslant 0; \\
 \alpha_i (y_i f(x_i) - 1) = 0;
@@ -83,7 +83,7 @@ $$
 * 由于数据集每个类别只有一个样本，则必定为支持向量，所以最终模型$f(x)$为,
 
 $$
-\begin{cases} 
+\begin{cases}
 \alpha_1 - \alpha_2 = 0 \\
 w = \alpha_1 x_1 - \alpha_2 x_2 \\
 b = \frac{1}{2} ((1-w^T x_1) + (-1-w^T x_2)) \\
@@ -93,7 +93,7 @@ $$
 
 * 其中$\alpha_1$与$\alpha_2$的选取不影响超平面的方向，但应以最小化$w^Tw$的原则取。
 
-## 2. 高斯核无限维度内积.
+## 2. 高斯核无限维度内积
 
 * 核内积形式,
 
